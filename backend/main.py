@@ -1,6 +1,6 @@
 import csv
 
-from fastapi import FastAPI, Depends, File, HTTPException
+from fastapi import FastAPI, Depends, File, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 import models, schemas
 from ArithmeticCalculator import calculate
@@ -33,11 +33,15 @@ def get_db():
     finally:
         db.close()
 
+@app.get("/")
+def read_root():
+    return {"message": "Hello, Microservice!"}
+
 #populate db with test.csv data calculating the result field with the random data from test.csv
 @app.post("/populate_db/")
-def populate_db(file: bytes = File("test.csv"), db: Session = Depends(get_db)):
+def populate_db(file: UploadFile = File(...), db: Session = Depends(get_db)):
     # Read the CSV file
-    csv_data = file.decode("utf-8").splitlines()
+    csv_data = file.file.read().decode("utf-8").splitlines()
     reader = csv.DictReader(csv_data)
 
     for row in reader:
@@ -84,7 +88,7 @@ def update_item(item_id: int, item: schemas.ItemCreate, db: Session = Depends(ge
     if db_item is None:
         raise HTTPException(status_code=404, detail="Item not found")
 
-    for field, value in item.dict().items():
+    for field, value in item.model_dump().items():
         setattr(db_item, field, value)
 
     db.commit()
@@ -107,9 +111,10 @@ def delete_item(item_id: int, db: Session = Depends(get_db)):
 #create operation that calculates the result from num1, operation and num2 input(using calculate from ArithmeticCalculator) and saves it to the database
 @app.post("/operations/", response_model=schemas.Operation)
 def create_operation(operation: schemas.OperationCreate, db: Session = Depends(get_db)):
-    if(operation.num1 in read_num1s(db)):
+    existing = db.query(models.Operation).filter(models.Operation.num1 == operation.num1).first()
+    if existing is not None:
         raise HTTPException(status_code=409, detail="Number 1 already used")
-    # Calculate the result using the ArithmeticCalculator before validation passes
+
     calculated_result = calculate({"num1": operation.num1, "opt": operation.opt, "num2": operation.num2})
     logging.info("CREATE: %s = %f", operation, calculated_result)
     db_operation = models.Operation(
@@ -128,11 +133,6 @@ def create_operation(operation: schemas.OperationCreate, db: Session = Depends(g
 def read_operations(db: Session = Depends(get_db)):
     operations = db.query(models.Operation).all()
     return operations
-
-@app.get("/operations/", response_model=list[int])
-def read_num1s(db: Session = Depends(get_db)):
-    num1s = db.query(models.Operation.num1).all()
-    return num1s
 
 #get one
 @app.get("/operations/{operation_id}", response_model=schemas.Operation)
