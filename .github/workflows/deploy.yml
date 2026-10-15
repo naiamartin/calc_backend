@@ -1,6 +1,4 @@
 name: App deployment
-defaults.run.working-directory: backend/terraform
-
 
 on:
   workflow_dispatch:

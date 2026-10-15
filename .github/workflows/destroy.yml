@@ -1,5 +1,4 @@
 name: Destroy app stack
-defaults.run.working-directory: backend/terraform
 
 on:
   workflow_dispatch:
