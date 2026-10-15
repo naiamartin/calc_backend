@@ -1,0 +1,6 @@
+.venv
+.env
+.__pycache__/
+db.db
+#ignore the .terraform directory, which contains the Terraform state and configuration files
+.terraform/
