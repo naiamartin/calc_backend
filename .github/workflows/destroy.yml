@@ -25,6 +25,7 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Destroy
+      working-directory: backend/terraform
       if: hashFiles(env.STATE_FILE) != ''
       run: terraform destroy -auto-approve
       env:
