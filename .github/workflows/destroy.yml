@@ -1,7 +1,5 @@
 name: Destroy app stack
-
-#locates terraform config files in the backend directory
-context: ./backend/terraform
+defaults.run.working-directory: backend/terraform
 
 on:
   workflow_dispatch:
