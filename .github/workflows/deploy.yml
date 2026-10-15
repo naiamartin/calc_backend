@@ -1,8 +1,5 @@
 name: App deployment
 
-#locates terraform config files in the backend directory
-context: ./backend/terraform
-
 on:
   workflow_dispatch:
 
