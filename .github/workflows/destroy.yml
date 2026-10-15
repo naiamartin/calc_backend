@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
- STATE_FILE: "terraform.tfstate"
+ STATE_FILE: "backend/terraform/terraform.tfstate"
 
 jobs:
   destroy_stack:
@@ -21,6 +21,7 @@ jobs:
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
+      working-directory: backend/terraform
       run: terraform init
 
     # Generates an execution plan for Terraform
