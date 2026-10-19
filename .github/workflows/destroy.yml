@@ -43,7 +43,7 @@ jobs:
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
 
-        git add ${STATE_FILE}
+        git add terraform.tfstate
         if ! git diff --cached --quiet ${STATE_FILE}; then
           git commit -m "chore: automated terrafrom state update"
           git push
