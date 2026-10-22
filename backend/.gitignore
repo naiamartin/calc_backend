@@ -1,6 +1,56 @@
-.venv
+# Environment and secrets
 .env
-.__pycache__/
-db.db
-#ignore the .terraform directory, which contains the Terraform state and configuration files
-.terraform/
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+build/
+dist/
+downloads/
+eggs/
+*.egg-info/
+.eggs/
+*.egg
+ pip-wheel-metadata/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Test and coverage artifacts
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+nosetests.xml
+test-results/
+
+# Type checking and lint caches
+.mypy_cache/
+.pytype/
+.ruff_cache/
+.tox/
+.nox/
+
+# Framework/runtime artifacts
+*.log
+*.sqlite3
+*.sqlite3-journal
+instance/
+media/
+staticfiles/
+
+# Editors and operating systems
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
